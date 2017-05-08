@@ -47,6 +47,10 @@ int O_FFD0_QN[] = {1, 0, 0, 1};
 int O_FFD1_Q[] = {1, 0, 1, 0};
 int O_FFD1_QN[] = {1, 0, 1, 1};
 
+// variables
+int entradaSeleccionada;
+int salidaSeleccionada;
+
 void setup() {
   // configurar pines
   pinMode(PIN_A, OUTPUT);
@@ -87,10 +91,14 @@ void probarXORs() {
 
 boolean probarXOR(int seleccionEntrada[], int seleccionSalida[]) {
   Serial.println("Probando XOR: " + parseEntrada(seleccionEntrada));
-  boolean resultado0 = probarEscenarioXOR(LOW, LOW, seleccionEntrada, seleccionSalida);
-  boolean resultado1 = probarEscenarioXOR(LOW, HIGH, seleccionEntrada, seleccionSalida);
-  boolean resultado2 = probarEscenarioXOR(HIGH, LOW, seleccionEntrada, seleccionSalida);
-  boolean resultado3 =  probarEscenarioXOR(HIGH, HIGH, seleccionEntrada, seleccionSalida);
+
+  seleccionarEntrada(seleccionEntrada);
+  seleccionarSalida(seleccionSalida);
+
+  boolean resultado0 = probarEscenarioXOR(LOW, LOW);
+  boolean resultado1 = probarEscenarioXOR(LOW, HIGH);
+  boolean resultado2 = probarEscenarioXOR(HIGH, LOW);
+  boolean resultado3 =  probarEscenarioXOR(HIGH, HIGH);
 
   boolean pruebasExitosas = (resultado0 == resultado1 == resultado2 == resultado3 == true);
 
@@ -100,7 +108,7 @@ boolean probarXOR(int seleccionEntrada[], int seleccionSalida[]) {
 
 }
 
-boolean probarEscenarioXOR(int a, int b, int seleccionEntrada[], int seleccionSalida[]) {
+boolean probarEscenarioXOR(int a, int b) {
   boolean esperado;
   if (a != b) {
     esperado = HIGH;
@@ -108,7 +116,7 @@ boolean probarEscenarioXOR(int a, int b, int seleccionEntrada[], int seleccionSa
     esperado = LOW;
   }
 
-  ejecutarPrueba(a, b, seleccionEntrada, seleccionSalida);
+  ejecutarPrueba(a, b);
   verificarSalida(esperado);
 }
 
@@ -123,20 +131,22 @@ void probarCOMPs() {
 
 boolean probarCOMP(int seleccionEntrada[], int seleccionSalida[]) {
   Serial.println("Probando COMP: " + parseEntrada(seleccionEntrada));
-  boolean resultado0 = probarEscenarioCOMP(LOW, LOW, seleccionEntrada, seleccionSalida);
-  boolean resultado1 = probarEscenarioCOMP(LOW, HIGH, seleccionEntrada, seleccionSalida);
-  boolean resultado2 = probarEscenarioCOMP(HIGH, LOW, seleccionEntrada, seleccionSalida);
-  boolean resultado3 =  probarEscenarioCOMP(HIGH, HIGH, seleccionEntrada, seleccionSalida);
+  seleccionarEntrada(seleccionEntrada);
+  seleccionarSalida(seleccionSalida);
+
+  boolean resultado0 = probarEscenarioCOMP(LOW, LOW);
+  boolean resultado1 = probarEscenarioCOMP(LOW, HIGH);
+  boolean resultado2 = probarEscenarioCOMP(HIGH, LOW);
+  boolean resultado3 =  probarEscenarioCOMP(HIGH, HIGH);
 
   boolean pruebasExitosas = (resultado0 == resultado1 == resultado2 == resultado3 == true);
 
   if (pruebasExitosas) {
     Serial.println("XOR:" + parseEntrada(seleccionEntrada) + "= OK");
   }
-
 }
 
-boolean probarEscenarioCOMP(int a, int b, int seleccionEntrada[], int seleccionSalida[]) {
+boolean probarEscenarioCOMP(int a, int b) {
   boolean esperado;
   if (a != b) {
     esperado = HIGH;
@@ -144,7 +154,7 @@ boolean probarEscenarioCOMP(int a, int b, int seleccionEntrada[], int seleccionS
     esperado = LOW;
   }
 
-  ejecutarPrueba(a, b, seleccionEntrada, seleccionSalida);
+  ejecutarPrueba(a, b);
   verificarSalida(esperado);
 }
 
@@ -157,12 +167,13 @@ void probarFFDs() {
 
 boolean probarFFD(int seleccionEntrada[], int seleccionSalidaQ[], int seleccionSalidaQN[]) {
   Serial.println("Probando COMP: " + parseEntrada(seleccionEntrada));
+  seleccionarEntrada(seleccionEntrada);
 
-  boolean resultado0 = probarEscenarioFFD(LOW, HIGH, LOW, HIGH, seleccionEntrada, seleccionSalidaQ, seleccionSalidaQN);
-  boolean resultado1 = probarEscenarioFFD(HIGH, HIGH, LOW, HIGH, seleccionEntrada, seleccionSalidaQ, seleccionSalidaQN);
-  boolean resultado2 = probarEscenarioFFD(LOW, LOW, HIGH, LOW, seleccionEntrada, seleccionSalidaQ, seleccionSalidaQN);
-  boolean resultado3 =  probarEscenarioFFD(HIGH, LOW, HIGH, HIGH, seleccionEntrada, seleccionSalidaQ, seleccionSalidaQN);
-  boolean resultado4 =  probarEscenarioFFD(LOW, HIGH, HIGH, LOW, seleccionEntrada, seleccionSalidaQ, seleccionSalidaQN);
+  boolean resultado0 = probarEscenarioFFD(LOW, HIGH, LOW, HIGH, seleccionSalidaQ, seleccionSalidaQN);
+  boolean resultado1 = probarEscenarioFFD(HIGH, HIGH, LOW, HIGH, seleccionSalidaQ, seleccionSalidaQN);
+  boolean resultado2 = probarEscenarioFFD(LOW, LOW, HIGH, LOW, seleccionSalidaQ, seleccionSalidaQN);
+  boolean resultado3 =  probarEscenarioFFD(HIGH, LOW, HIGH, HIGH, seleccionSalidaQ, seleccionSalidaQN);
+  boolean resultado4 =  probarEscenarioFFD(LOW, HIGH, HIGH, LOW, seleccionSalidaQ, seleccionSalidaQN);
 
   boolean pruebasExitosas = (resultado0 == resultado1 == resultado2 == resultado3 == true);
 
@@ -172,7 +183,7 @@ boolean probarFFD(int seleccionEntrada[], int seleccionSalidaQ[], int seleccionS
 
 }
 
-boolean probarEscenarioFFD(int d, int reloj, int qInicial, int qnInicial, int seleccionEntrada[], int seleccionSalidaQ[], int seleccionSalidaQN[]) {
+boolean probarEscenarioFFD(int d, int reloj, int qInicial, int qnInicial, int seleccionSalidaQ[], int seleccionSalidaQN[]) {
   boolean qEsperado;
   boolean qnEsperado;
   if (reloj == LOW) {
@@ -183,12 +194,14 @@ boolean probarEscenarioFFD(int d, int reloj, int qInicial, int qnInicial, int se
     qnEsperado = negar(qEsperado);
   }
 
-  ejecutarPrueba(d, reloj, seleccionEntrada, seleccionSalidaQ);
+  seleccionarSalida(seleccionSalidaQ);
+  ejecutarPrueba(d, reloj);
   verificarSalida(qEsperado);
 
   seleccionarSalida(seleccionSalidaQN);
   verificarSalida(qnEsperado);
 }
+
 void seleccionarEntrada(int entrada[]) {
   digitalWrite(PIN_I0, entrada[3]);
   digitalWrite(PIN_I1, entrada[2]);
@@ -203,12 +216,10 @@ void seleccionarSalida(int salida[]) {
   digitalWrite(PIN_O3, salida[0]);
 }
 
-void ejecutarPrueba(int a, int b, int seleccionEntrada[], int seleccionSalida[]) {
+void ejecutarPrueba(int a, int b) {
   String i_a = parseNivel(a);
   String i_b = parseNivel(b);
   Serial.println("A=" + i_a + ", B=" + i_b);
-  seleccionarEntrada(seleccionEntrada);
-  seleccionarSalida(seleccionSalida);
 
   digitalWrite(PIN_A, a);
   digitalWrite(PIN_B, b);
