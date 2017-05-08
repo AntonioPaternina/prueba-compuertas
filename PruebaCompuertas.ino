@@ -67,6 +67,7 @@ void setup() {
   Serial.println("--- Iniciando pruebas ---");
 
   probarXORs();
+  probarCOMPs();
 }
 
 
@@ -83,33 +84,23 @@ void probarXORs() {
   probarXOR(I_XOR3, O_XOR3);
 }
 
-boolean probarXOR(int entrada[], int salida[]) {
-  Serial.println("Probando XOR: " + parseEntrada(entrada));
-  boolean p0 = probarXOR(LOW, LOW, entrada, salida);
-  boolean p1 = probarXOR(LOW, HIGH, entrada, salida);
-  boolean p2 = probarXOR(HIGH, LOW, entrada, salida);
-  boolean p3 =  probarXOR(HIGH, HIGH, entrada, salida);
+boolean probarXOR(int seleccionEntrada[], int seleccionSalida[]) {
+  Serial.println("Probando XOR: " + parseEntrada(seleccionEntrada));
+  boolean resultado0 = probarEscenarioXOR(LOW, LOW, seleccionEntrada, seleccionSalida);
+  boolean resultado1 = probarEscenarioXOR(LOW, HIGH, seleccionEntrada, seleccionSalida);
+  boolean resultado2 = probarEscenarioXOR(HIGH, LOW, seleccionEntrada, seleccionSalida);
+  boolean resultado3 =  probarEscenarioXOR(HIGH, HIGH, seleccionEntrada, seleccionSalida);
 
-  boolean pruebasExitosas = p0 == p1 == p2 == p3 == true;
+  boolean pruebasExitosas = (resultado0 == resultado1 == resultado2 == resultado3 == true);
 
   if (pruebasExitosas) {
-    Serial.println("XOR:" + parseEntrada(entrada) + "= OK");
+    Serial.println("XOR:" + parseEntrada(seleccionEntrada) + "= OK");
   }
 
 }
 
-boolean probarXOR(int a, int b, int entrada[], int salida[]) {
-  String i_a = parseNivel(a);
-  String i_b = parseNivel(b);
-  Serial.println("A=" + i_a + ", B=" + b);
-  seleccionarEntrada(entrada);
-  seleccionarSalida(salida);
-
-  digitalWrite(PIN_A, a);
-  digitalWrite(PIN_B, b);
-
-  int y = digitalRead(PIN_Y);
-  Serial.println("salida=" + parseNivel(y));
+boolean probarEscenarioXOR(int a, int b, int seleccionEntrada[], int seleccionSalida[]) {
+  ejecutarPrueba(a, b, seleccionEntrada, seleccionSalida);
 
   boolean esperado;
   if (a != b) {
@@ -117,15 +108,45 @@ boolean probarXOR(int a, int b, int entrada[], int salida[]) {
   } else {
     esperado = LOW;
   }
-  Serial.println("esperado=" + parseNivel(esperado));
 
-  if (y == esperado) {
-    Serial.println("OK");
-    return true;
-  } else {
-    Serial.println("NOK");
-    return false;
+  verificarSalida(esperado);
+}
+
+void probarCOMPs() {
+  Serial.println("Probando XORs");
+
+  probarXOR(I_COMP0, O_COMP0);
+  probarXOR(I_COMP1, O_COMP1);
+  probarXOR(I_COMP2, O_COMP2);
+  probarXOR(I_COMP3, O_COMP3);
+}
+
+boolean probarCOMP(int seleccionEntrada[], int seleccionSalida[]) {
+  Serial.println("Probando COMP: " + parseEntrada(seleccionEntrada));
+  boolean resultado0 = probarEscenarioCOMP(LOW, LOW, seleccionEntrada, seleccionSalida);
+  boolean resultado1 = probarEscenarioCOMP(LOW, HIGH, seleccionEntrada, seleccionSalida);
+  boolean resultado2 = probarEscenarioCOMP(HIGH, LOW, seleccionEntrada, seleccionSalida);
+  boolean resultado3 =  probarEscenarioCOMP(HIGH, HIGH, seleccionEntrada, seleccionSalida);
+
+  boolean pruebasExitosas = (resultado0 == resultado1 == resultado2 == resultado3 == true);
+
+  if (pruebasExitosas) {
+    Serial.println("XOR:" + parseEntrada(seleccionEntrada) + "= OK");
   }
+
+}
+
+boolean probarEscenarioCOMP(int a, int b, int seleccionEntrada[], int seleccionSalida[]) {
+  ejecutarPrueba(a, b, seleccionEntrada, seleccionSalida);
+
+  boolean esperado;
+  if (a != b) {
+    esperado = HIGH;
+  } else {
+    esperado = LOW;
+  }
+
+  verificarSalida(esperado);
 }
 
 void seleccionarEntrada(int entrada[]) {
@@ -140,6 +161,31 @@ void seleccionarSalida(int salida[]) {
   digitalWrite(PIN_O1, salida[2]);
   digitalWrite(PIN_O2, salida[1]);
   digitalWrite(PIN_O3, salida[0]);
+}
+
+void ejecutarPrueba(int a, int b, int seleccionEntrada[], int seleccionSalida[]) {
+  String i_a = parseNivel(a);
+  String i_b = parseNivel(b);
+  Serial.println("A=" + i_a + ", B=" + i_b);
+  seleccionarEntrada(seleccionEntrada);
+  seleccionarSalida(seleccionSalida);
+
+  digitalWrite(PIN_A, a);
+  digitalWrite(PIN_B, b);
+}
+
+boolean verificarSalida(int esperado) {
+  Serial.println("esperado=" + parseNivel(esperado));
+  int y = digitalRead(PIN_Y);
+
+  Serial.println("salida=" + parseNivel(y));
+  if (y == esperado) {
+    Serial.println("OK");
+    return true;
+  } else {
+    Serial.println("NOK");
+    return false;
+  }
 }
 
 String parseEntrada(int entrada[]) {
