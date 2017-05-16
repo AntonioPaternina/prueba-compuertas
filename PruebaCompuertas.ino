@@ -17,6 +17,10 @@ int PIN_NO_B1 = 7;
 int PIN_NO_B2 = 8;
 int PIN_NO_B3 = 9;
 
+int PIN_NO_COMP_MENOR = A1;
+int PIN_NO_COMP_IGUAL = A2;
+int PIN_NO_COMP_MAYOR = A3;
+
 // selección de salidas de las compuertas
 int PIN_NO_O0 = 10;
 int PIN_NO_O1 = 11;
@@ -61,6 +65,9 @@ void setup() {
   pinMode(PIN_NO_DEBUG, INPUT);
 
   pinMode(PIN_NO_Y, INPUT);
+  pinMode(PIN_NO_COMP_MENOR, OUTPUT);
+  pinMode(PIN_NO_COMP_IGUAL, OUTPUT);
+  pinMode(PIN_NO_COMP_MAYOR, OUTPUT);
 
   Serial.begin(9600);
   Serial.println("--- Iniciando pruebas ---");
@@ -117,6 +124,8 @@ boolean probarEscenarioXOR(int a, int b) {
 void probarCOMPs() {
   Serial.println("*** Probando COMPs ***");
 
+  boolean pruebasExitosas = true;
+
   for (int i = 0; i < 16; i++) {
     for (int j = 0; j < 16; j++) {
       Serial.println("Probando A=" + String(i) + ", B=" + String(j));
@@ -132,8 +141,9 @@ void probarCOMPs() {
       digitalWrite(PIN_NO_B3, bitRead(j, 3));
 
 
-
-      boolean pruebasExitosas = true;
+      digitalWrite(PIN_NO_COMP_MENOR, LOW);
+      digitalWrite(PIN_NO_COMP_IGUAL, HIGH);
+      digitalWrite(PIN_NO_COMP_MAYOR, LOW);
 
       seleccionarSalida(O_COMP_MAYOR);
       int esperado;
@@ -188,6 +198,11 @@ void probarCOMPs() {
         Serial.println("OK");
       }
     }
+  }
+  if (pruebasExitosas) {
+    Serial.println("Pruebas de COMP exitosas");
+  } else {
+    Serial.println("Pruebas con fallos en COMP");
   }
 }
 
