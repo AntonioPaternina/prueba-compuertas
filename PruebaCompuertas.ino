@@ -96,12 +96,14 @@ boolean probarXOR(int seleccionSalida[]) {
 
   seleccionarSalida(seleccionSalida);
 
-  boolean resultado0 = probarEscenarioXOR(LOW, LOW);
-  boolean resultado1 = probarEscenarioXOR(LOW, HIGH);
-  boolean resultado2 = probarEscenarioXOR(HIGH, LOW);
-  boolean resultado3 =  probarEscenarioXOR(HIGH, HIGH);
+  boolean pruebasExitosas = true;
 
-  if (resultado0 && resultado1 && resultado2 && resultado3) {
+  pruebasExitosas &= probarEscenarioXOR(LOW, LOW);
+  pruebasExitosas &= probarEscenarioXOR(LOW, HIGH);
+  pruebasExitosas &= probarEscenarioXOR(HIGH, LOW);
+  pruebasExitosas &=  probarEscenarioXOR(HIGH, HIGH);
+
+  if (pruebasExitosas) {
     Serial.println("XOR:" + parseEntrada(seleccionSalida) + "= OK");
   } else {
     Serial.println("XOR:" + parseEntrada(seleccionSalida) + "= NOK !!!!!!!!!!!!!!!!!!");
