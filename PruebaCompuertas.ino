@@ -144,78 +144,98 @@ void probarCOMPs() {
 
   for (int i = 0; i < 16; i++) {
     for (int j = 0; j < 16; j++) {
-      printlnHandShake("Probando A=" + String(i) + ", B=" + String(j));
+      for (int k = 0; k < 3; k++) {
+        printlnHandShake("Probando A=" + String(i) + ", B=" + String(j) + ", K=" + String(k));
 
-      digitalWrite(PIN_NO_A0, bitRead(i, 0));
-      digitalWrite(PIN_NO_A1, bitRead(i, 1));
-      digitalWrite(PIN_NO_A2, bitRead(i, 2));
-      digitalWrite(PIN_NO_A3, bitRead(i, 3));
+        digitalWrite(PIN_NO_A0, bitRead(i, 0));
+        digitalWrite(PIN_NO_A1, bitRead(i, 1));
+        digitalWrite(PIN_NO_A2, bitRead(i, 2));
+        digitalWrite(PIN_NO_A3, bitRead(i, 3));
 
-      digitalWrite(PIN_NO_B0, bitRead(j, 0));
-      digitalWrite(PIN_NO_B1, bitRead(j, 1));
-      digitalWrite(PIN_NO_B2, bitRead(j, 2));
-      digitalWrite(PIN_NO_B3, bitRead(j, 3));
+        digitalWrite(PIN_NO_B0, bitRead(j, 0));
+        digitalWrite(PIN_NO_B1, bitRead(j, 1));
+        digitalWrite(PIN_NO_B2, bitRead(j, 2));
+        digitalWrite(PIN_NO_B3, bitRead(j, 3));
 
-      digitalWrite(PIN_NO_COMP_MENOR, LOW);
-      digitalWrite(PIN_NO_COMP_IGUAL, HIGH);
-      digitalWrite(PIN_NO_COMP_MAYOR, LOW);
+        if (k == 0) {
+          digitalWrite(PIN_NO_COMP_MENOR, LOW);
+          digitalWrite(PIN_NO_COMP_IGUAL, HIGH);
+          digitalWrite(PIN_NO_COMP_MAYOR, LOW);
+        } else if (k == 1) {
+          digitalWrite(PIN_NO_COMP_MENOR, HIGH);
+          digitalWrite(PIN_NO_COMP_IGUAL, LOW);
+          digitalWrite(PIN_NO_COMP_MAYOR, LOW);
+        } else if (k == 2) {
+          digitalWrite(PIN_NO_COMP_MENOR, LOW);
+          digitalWrite(PIN_NO_COMP_IGUAL, LOW);
+          digitalWrite(PIN_NO_COMP_MAYOR, HIGH);
+        }
 
-      seleccionarSalida(O_COMP_MAYOR);
-      int esperado;
-      int salida = negar(digitalRead(PIN_NO_Y));
-      if (i > j) {
-        esperado = HIGH;
-      } else {
-        esperado = LOW;
-      }
+        seleccionarSalida(O_COMP_MAYOR);
+        int esperado;
+        int salida = negar(digitalRead(PIN_NO_Y));
+        if (k == 0 && i > j) {
+          esperado = HIGH;
+        } else if ((k == 1 && i > j)) {
+          esperado = HIGH;
+        } else if ((k == 2 && i == j) || (k == 2 && i > j)) {
+          esperado = HIGH;
+        } else {
+          esperado = LOW;
+        }
 
-      Serial.print(String(i) + ">" + String(j) + ": ");
-      if (salida != esperado) {
-        printlnHandShake(
-          "NOK: esperado=" + String(esperado) + ", salida="
-          + String(salida));
-        pruebasExitosas &= false;
-        esperar();
-      } else {
-        printlnHandShake("OK");
-      }
+        Serial.print(String(i) + ">" + String(j) + ": ");
+        if (salida != esperado) {
+          printlnHandShake(
+            "NOK: esperado=" + String(esperado) + ", salida="
+            + String(salida));
+          pruebasExitosas &= false;
+          esperar();
+        } else {
+          printlnHandShake("OK");
+        }
 
-      seleccionarSalida(O_COMP_IGUAL);
-      salida = negar(digitalRead(PIN_NO_Y));
-      if (i == j) {
-        esperado = HIGH;
-      } else {
-        esperado = LOW;
-      }
+        seleccionarSalida(O_COMP_IGUAL);
+        salida = negar(digitalRead(PIN_NO_Y));
+        if (k == 0 && i == j) {
+          esperado = HIGH;
+        } else {
+          esperado = LOW;
+        }
 
-      Serial.print(String(i) + "=" + String(j) + ": ");
-      if (salida != esperado) {
-        printlnHandShake(
-          "NOK: esperado=" + String(esperado) + ", salida="
-          + String(salida));
-        pruebasExitosas &= false;
-        esperar();
-      } else {
-        printlnHandShake("OK");
-      }
+        Serial.print(String(i) + "=" + String(j) + ": ");
+        if (salida != esperado) {
+          printlnHandShake(
+            "NOK: esperado=" + String(esperado) + ", salida="
+            + String(salida));
+          pruebasExitosas &= false;
+          esperar();
+        } else {
+          printlnHandShake("OK");
+        }
 
-      seleccionarSalida(O_COMP_MENOR);
-      salida = negar(digitalRead(PIN_NO_Y));
-      if (i < j) {
-        esperado = HIGH;
-      } else {
-        esperado = LOW;
-      }
+        seleccionarSalida(O_COMP_MENOR);
+        salida = negar(digitalRead(PIN_NO_Y));
+        if (k == 0 && i < j) {
+          esperado = HIGH;
+        } else if ((k == 1 && i == j) || (k == 1 && i < j)) {
+          esperado = HIGH;
+        } else if (k == 2 && i < j) {
+          esperado = HIGH;
+        } else {
+          esperado = LOW;
+        }
 
-      Serial.print(String(i) + "<" + String(j) + ": ");
-      if (salida != esperado) {
-        printlnHandShake(
-          "NOK: esperado=" + String(esperado) + ", salida="
-          + String(salida));
-        pruebasExitosas &= false;
-        esperar();
-      } else {
-        printlnHandShake("OK");
+        Serial.print(String(i) + "<" + String(j) + ": ");
+        if (salida != esperado) {
+          printlnHandShake(
+            "NOK: esperado=" + String(esperado) + ", salida="
+            + String(salida));
+          pruebasExitosas &= false;
+          esperar();
+        } else {
+          printlnHandShake("OK");
+        }
       }
     }
   }
