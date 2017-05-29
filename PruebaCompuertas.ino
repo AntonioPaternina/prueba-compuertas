@@ -70,7 +70,6 @@ void setup() {
   pinMode(PIN_NO_COMP_MAYOR, OUTPUT);
 
   Serial.begin(9600);
-//  establishContact();
 }
 
 void loop() {
@@ -122,6 +121,8 @@ boolean probarXOR(int seleccionSalida[]) {
       "XOR:" + parseEntrada(seleccionSalida)
       + "= NOK !!!!!!!!!!!!!!!!!!");
   }
+
+  return pruebasExitosas;
 }
 
 boolean probarEscenarioXOR(int a, int b) {
@@ -229,10 +230,12 @@ void probarCOMPs() {
 void probarFFDs() {
   printlnHandShake("*** Probando FFDs ***");
 
-  boolean resultado0 = probarFFD(O_FFD0_Q, O_FFD0_QN);
-  boolean resultado1 =  probarFFD(O_FFD1_Q, O_FFD1_QN);
+  boolean pruebasExitosas = true;
 
-  if (resultado0 && resultado1) {
+  pruebasExitosas &= probarFFD(O_FFD0_Q, O_FFD0_QN);
+  pruebasExitosas &=  probarFFD(O_FFD1_Q, O_FFD1_QN);
+
+  if (pruebasExitosas) {
     printlnHandShake("$FFSOK");
   } else {
     printlnHandShake("$FFSNOK");
@@ -242,20 +245,22 @@ void probarFFDs() {
 boolean probarFFD(int seleccionSalidaQ[], int seleccionSalidaQN[]) {
   printlnHandShake("Probando FFD: " + parseEntrada(seleccionSalidaQ));
 
-  boolean resultado0 = probarEscenarioFFD(LOW, LOW, HIGH, seleccionSalidaQ,
-                                          seleccionSalidaQN);
-  boolean resultado1 = probarEscenarioFFD(HIGH, HIGH, LOW, seleccionSalidaQ,
-                                          seleccionSalidaQN);
+  boolean pruebasExitosas = true;
 
-  if (resultado0 && resultado1) {
+  pruebasExitosas &= probarEscenarioFFD(LOW, LOW, HIGH, seleccionSalidaQ,
+                                        seleccionSalidaQN);
+  pruebasExitosas &= probarEscenarioFFD(HIGH, HIGH, LOW, seleccionSalidaQ,
+                                        seleccionSalidaQN);
+
+  if (pruebasExitosas) {
     printlnHandShake("FFD:" + parseEntrada(seleccionSalidaQ) + "= OK");
   } else {
     printlnHandShake(
       "FFD:" + parseEntrada(seleccionSalidaQ)
       + "= NOK !!!!!!!!!!!!!!!!!!");
-
   }
 
+  return pruebasExitosas;
 }
 
 boolean probarEscenarioFFD(int d, int qInicial, int qnInicial,
@@ -362,13 +367,6 @@ int esperar() {
     printlnHandShake("sigo");
   }
 }
-
-//void establishContact() {
-//  while (Serial.available() <= 0) {
-//    Serial.println("%");
-//    delay(300);
-//  }
-//}
 
 void printlnHandShake(String mensaje) {
   char input = '0';

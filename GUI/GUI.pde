@@ -50,7 +50,6 @@ void setup() {
 
   String portName = Serial.list()[0]; //Verificar
   myPort = new Serial(this, portName, 9600);
-  //myPort.bufferUntil('\n');
 }
 
 void draw() {
@@ -65,28 +64,6 @@ void draw() {
   establecerColor(ffOK);
   rect(ffX, ffY, anchoBoton, altoBoton);
 }
-
-//void serialEvent(Serial myPort) {
-//  val = myPort.readStringUntil('\n');
-
-//  if (val != null) {
-//    val = trim(val);
-//    println(val);
-
-//    if (firstContact == false) {
-//      if (val.equals("%")) {
-//        myPort.clear();
-//        firstContact = true;
-//        myPort.write("%");
-//        println("contact");
-//      }
-//    } else {
-//      //println(val);
-//    }
-//  }
-
-//  myPort.write('&');
-//}
 
 void mousePressed() {
   if (sobreXOR()) {
