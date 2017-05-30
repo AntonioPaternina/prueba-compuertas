@@ -22,7 +22,9 @@ boolean xorOK;
 boolean compOK;
 boolean ffOK;
 
-boolean firstContact = false;
+PFont fuente;
+int labelPrincipalX;
+int labelPrincipalY;
 
 void setup() {
   size(640, 360);
@@ -35,6 +37,8 @@ void setup() {
   colorNOK = color(255, 0, 0);
   colorEjecutandoPruebas = color(143, 188, 143);
 
+  fuente = createFont("Arial", 16, true);
+
   compX = (width / 2) - (anchoBoton / 2);
   compY = (height / 2) - (altoBoton / 2);
 
@@ -43,6 +47,9 @@ void setup() {
 
   ffX = compX + espacioEntreBotones + anchoBoton;
   ffY = compY;
+
+  labelPrincipalX = (width / 2);
+  labelPrincipalY = compY - 60;
 
   ellipseMode(CENTER);
 
@@ -63,6 +70,29 @@ void draw() {
 
   establecerColor(ffOK);
   rect(ffX, ffY, anchoBoton, altoBoton);
+
+  textFont(fuente, 36);
+  fill(0);
+  textAlign(CENTER);
+  text("Proyecto Circuitos Lógicos", labelPrincipalX, labelPrincipalY);
+  
+  textFont(fuente, 26);
+  fill(0);
+  textAlign(CENTER);
+  text("probador de circuitos", labelPrincipalX, labelPrincipalY + 30);
+
+  textFont(fuente, 26);
+  fill(0);
+  textAlign(CENTER);
+  text("XORs", xorX + (anchoBoton / 2), xorY + (altoBoton / 2) + 10);
+
+  fill(0);
+  textAlign(CENTER);
+  text("COMP", compX + (anchoBoton / 2), compY + (altoBoton / 2) + 10);
+
+  fill(0);
+  textAlign(CENTER);
+  text("FFDs", ffX + (anchoBoton / 2), ffY + (altoBoton / 2) + 10);
 }
 
 void mousePressed() {
