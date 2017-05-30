@@ -267,10 +267,8 @@ boolean probarFFD(int seleccionSalidaQ[], int seleccionSalidaQN[]) {
 
   boolean pruebasExitosas = true;
 
-  pruebasExitosas &= probarEscenarioFFD(LOW, LOW, HIGH, seleccionSalidaQ,
-                                        seleccionSalidaQN);
-  pruebasExitosas &= probarEscenarioFFD(HIGH, HIGH, LOW, seleccionSalidaQ,
-                                        seleccionSalidaQN);
+  pruebasExitosas &= probarEscenarioFFD(LOW, seleccionSalidaQ, seleccionSalidaQN);
+  pruebasExitosas &= probarEscenarioFFD(HIGH, seleccionSalidaQ, seleccionSalidaQN);
 
   if (pruebasExitosas) {
     printlnHandShake("FFD:" + parseEntrada(seleccionSalidaQ) + "= OK");
@@ -283,8 +281,7 @@ boolean probarFFD(int seleccionSalidaQ[], int seleccionSalidaQN[]) {
   return pruebasExitosas;
 }
 
-boolean probarEscenarioFFD(int d, int qInicial, int qnInicial,
-                           int seleccionSalidaQ[], int seleccionSalidaQN[]) {
+boolean probarEscenarioFFD(int d, int seleccionSalidaQ[], int seleccionSalidaQN[]) {
   boolean qEsperado;
   boolean qnEsperado;
   boolean exito = true;
